@@ -1,0 +1,10 @@
+@startuml
+skinparam backgroundColor transparent
+actor Consumer
+participant "Label" as Label
+participant "Thing" as Thing
+Consumer -> Label : follow cite
+Label -> Thing : resolve
+Label ->x Thing : string break
+note right of Label : wire was the label
+@enduml

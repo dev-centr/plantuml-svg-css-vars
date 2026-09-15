@@ -1,0 +1,14 @@
+= Initial plantuml-svg-css-vars release
+:description: First release of the PlantUML/Kroki Themed SVG adapter.
+
+== Why
+
+Kroki already renders PlantUML to SVG, but fixed-color `<img>` assets do not follow a site dark-mode toggle.
+This adapter mirrors `@dev-centr/mermaid-svg-css-vars` for PlantUML.
+
+== Change
+
+* `normalizePlantumlSvgForWeb` / `preparePlantumlSvgForWeb`
+* `prepareThemedPlantumlSvg` and dual-output API
+* Sequence and component structural binding helpers
+* CLI with `--manifest`, `--dual-output`, `--host-output`, `--check`

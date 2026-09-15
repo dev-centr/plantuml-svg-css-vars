@@ -1,0 +1,104 @@
+ifndef::env-github[:icons: font]
+:toc: preamble
+:toclevels: 2
+:sectanchors:
+
+ifdef::env-github[]
+++++
+<a id="readme-top"></a>
+<div align="center">
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/graphs/contributors"><img src="https://img.shields.io/github/contributors/dev-centr/plantuml-svg-css-vars.svg?style=for-the-badge" alt="Contributors"></a>
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/network/members"><img src="https://img.shields.io/github/forks/dev-centr/plantuml-svg-css-vars.svg?style=for-the-badge" alt="Forks"></a>
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/stargazers"><img src="https://img.shields.io/github/stars/dev-centr/plantuml-svg-css-vars.svg?style=for-the-badge" alt="Stars"></a>
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/issues"><img src="https://img.shields.io/github/issues/dev-centr/plantuml-svg-css-vars.svg?style=for-the-badge" alt="Issues"></a>
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/blob/main/LICENSE"><img src="https://img.shields.io/github/license/dev-centr/plantuml-svg-css-vars.svg?style=for-the-badge" alt="License"></a>
+<br />
+<h3 align="center">plantuml-svg-css-vars</h3>
+<p align="center">
+Post-process PlantUML/Kroki SVG into Themed SVG (adaptive + host) with webCompatibility normalization.<br />
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/issues">Report Bug</a>
+&middot;
+<a href="https://github.com/dev-centr/plantuml-svg-css-vars/issues">Request Feature</a>
+</p>
+</div>
+++++
+endif::[]
+
+ifndef::env-github[]
+= plantuml-svg-css-vars
+
+Post-process PlantUML/Kroki SVG into Themed SVG (adaptive + host) with webCompatibility normalization.
+endif::[]
+
+== About The Project
+
+PlantUML adapter for the generator-neutral https://github.com/dev-centr/themed-svg[Themed SVG] standard.
+Sibling of https://github.com/dev-centr/mermaid-svg-css-vars[`@dev-centr/mermaid-svg-css-vars`].
+
+Kroki/PlantUML already emit SVG. This package:
+
+. Normalizes the SVG for responsive web embedding (`width="100%"`, `preserveAspectRatio="xMidYMid meet"`, `themed-svg-root`).
+. Applies an explicit Themed SVG manifest (sequence or component selector profiles included).
+. Emits **standalone-adaptive** (bundled light/dark + `prefers-color-scheme`) and **host** (manual site toggle via runtime inline) outputs.
+
+Package: `@dev-centr/plantuml-svg-css-vars`
+
+Antora sites are a primary *consumer* (compose with Kroki in CI). This package is **not** Antora-specific — do not fork it into an Antora org to express that importance.
+
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
+== Installation
+
+[source,bash]
+----
+pnpm add @dev-centr/plantuml-svg-css-vars
+----
+
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
+== Usage
+
+[source,ts]
+----
+import {
+  prepareThemedPlantumlSvgDualOutput,
+  plantumlSequenceBindings,
+} from '@dev-centr/plantuml-svg-css-vars';
+
+const result = prepareThemedPlantumlSvgDualOutput(krokiSvg, manifest);
+----
+
+CLI:
+
+[source,bash]
+----
+# After Kroki/local PlantUML renders diagram.raw.svg
+plantuml-svg-css-vars --manifest diagram.theme.json --dual-output \
+  --output diagram.svg --host-output diagram.host.svg diagram.raw.svg
+----
+
+Helper profiles: `plantumlSequenceBindings()`, `plantumlComponentBindings()`, `plantumlBindingsForSvg(svg)`.
+
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
+== Built With
+
+* https://github.com/dev-centr/themed-svg[@dev-centr/themed-svg]
+* TypeScript / Node.js 20+
+
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
+== License
+
+Distributed under the MIT License. See `LICENSE`.
+
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
+== Contact
+
+Dev Centr — https://github.com/dev-centr

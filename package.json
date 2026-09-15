@@ -1,0 +1,66 @@
+{
+  "name": "@dev-centr/plantuml-svg-css-vars",
+  "version": "0.1.0",
+  "description": "Post-process PlantUML/Kroki SVG through Themed SVG (adaptive + host) with webCompatibility normalization.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Dev Centr",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-centr/plantuml-svg-css-vars.git"
+  },
+  "homepage": "https://github.com/dev-centr/plantuml-svg-css-vars#readme",
+  "bugs": {
+    "url": "https://github.com/dev-centr/plantuml-svg-css-vars/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "plantuml",
+    "kroki",
+    "svg",
+    "css-variables",
+    "theme",
+    "dark-mode",
+    "themed-svg",
+    "prerender"
+  ],
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "bin": {
+    "plantuml-svg-css-vars": "./bin/plantuml-svg-css-vars.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.adoc",
+    "CHANGELOG.adoc",
+    "changelog-details",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "tsc -p tsconfig.json",
+    "test": "pnpm run build && node --test dist/test/*.test.js",
+    "prepublishOnly": "pnpm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "@dev-centr/themed-svg": "^0.2.3"
+  }
+}
