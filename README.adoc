@@ -55,6 +55,15 @@ Antora sites are a primary *consumer* (compose with Kroki in CI). This package i
 pnpm add @dev-centr/plantuml-svg-css-vars
 ----
 
+Until the package is on the npm registry (first publish needs a Trusted Publisher entry for this new package name under the `@dev-centr` org on npmjs.com), install from the git tag:
+
+[source,bash]
+----
+pnpm add github:dev-centr/plantuml-svg-css-vars#v0.1.0
+----
+
+After registering Trusted Publishing for `@dev-centr/plantuml-svg-css-vars` → GitHub `dev-centr/plantuml-svg-css-vars` workflow `Publish to npm`, re-run the `v0.1.0` tag workflow (or bump and tag).
+
 ++++
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 ++++
