@@ -1,0 +1,23 @@
+= Actor stick-figure edge paints
+:description: Bind PlantUML stickmen to edge tokens and classify actor paints.
+:page-audience: plantuml-svg-css-vars users and maintainers
+:page-usage-context: Understanding why actor stick figures vanished in host dark mode
+:page-orig-author: Cursor agent on behalf of Ryan Johnson
+:page-last-author: Cursor agent on behalf of Ryan Johnson
+:page-last-edited: 2026-09-15
+
+== Why
+
+PlantUML `actor` stick figures are an ellipse head plus a `fill="none"` limb
+path under `.participant`. v0.1.1 rebound those strokes to
+`color.border.primary`. On host dark themes (Valentus), border is often a
+near-invisible hairline (`rgba(255,255,255,0.09)`), so limbs and head outlines
+disappeared while boxed participants still looked fine (fill-driven). Dashed
+lifelines were also mis-tagged as `sequence-divider` when their stroke matched
+divider black.
+
+== Change
+
+* Stick-figure ellipse / path / circle / line strokes bind to `color.edge`.
+* `classifyPlantumlSequencePaint()` tags classic stickman ellipse + limb paths
+  with `actor`, and skips `stroke-dasharray` lines when labeling dividers.

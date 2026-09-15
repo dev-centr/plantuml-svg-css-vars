@@ -1,5 +1,10 @@
 = Changelog
 
+== 2026-09-15 -- 0.1.2 actor stick-figure edge paints
+
+* Stick-figure actor strokes bind to `color.edge` (not near-invisible host borders), with `actor` classification and safer divider tagging.
+* See xref:changelog-details/2026-09-15-actor-stickman-edge.adoc[Detailed changelog].
+
 == 2026-09-15 -- 0.1.1 sequence paint descendants
 
 * Sequence bindings now target painted child shapes under `participant` / `message`, and classify unclassed note / divider fills.

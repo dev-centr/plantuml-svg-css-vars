@@ -78,7 +78,7 @@ function appendClass(attrs: string, className: string): string {
 }
 
 /**
- * PlantUML often omits semantic classes on note / divider paint nodes.
+ * PlantUML often omits semantic classes on note / divider / stickman paint nodes.
  * Tag them so sequence bindings can recolor in dark mode.
  */
 export function classifyPlantumlSequencePaint(svg: string): string {
@@ -95,11 +95,43 @@ export function classifyPlantumlSequencePaint(svg: string): string {
     },
   );
 
+  // Stick-figure limbs: fill="none" path with body-outline stroke under a
+  // participant head. Tag as `actor` so edge bindings apply even if a future
+  // PlantUML build drops the parent participant class on the path.
+  out = out.replace(/<path\b([^>]*?)(\/?)>/gi, (full, attrs: string, selfClose: string) => {
+    if (/\bclass\s*=/i.test(attrs)) return full;
+    const fill = (getAttr(`<x${attrs}>`, 'fill') ?? '').trim().toLowerCase();
+    if (fill !== 'none') return full;
+    const style = getAttr(`<x${attrs}>`, 'style') ?? '';
+    const strokeAttr = normalizeHexColor(getAttr(`<x${attrs}>`, 'stroke'));
+    const strokeStyle = normalizeHexColor(
+      style.match(/(?:^|;)\s*stroke\s*:\s*([^;]+)/i)?.[1]?.trim() ?? null,
+    );
+    const stroke = strokeAttr ?? strokeStyle;
+    if (stroke !== '#000000' && stroke !== '#181818' && stroke !== '#2c2c2c') return full;
+    // Stick limbs are polylines (M…L…M…); skip filled arrow-like paths.
+    const d = (getAttr(`<x${attrs}>`, 'd') ?? '').replace(/\s+/g, '');
+    if (!/^M/i.test(d) || !/L/i.test(d) || (d.match(/M/gi) ?? []).length < 2) return full;
+    return `<path${appendClass(attrs, 'actor')}${selfClose}>`;
+  });
+
+  out = out.replace(/<ellipse\b([^>]*?)(\/?)>/gi, (full, attrs: string, selfClose: string) => {
+    if (/\bclass\s*=/i.test(attrs)) return full;
+    const fill = normalizeHexColor(getAttr(`<x${attrs}>`, 'fill'));
+    // Classic PlantUML actor/participant head fill.
+    if (fill !== '#e2e2f0' && fill !== '#eeeeee' && fill !== '#ffffff') return full;
+    return `<ellipse${appendClass(attrs, 'actor')}${selfClose}>`;
+  });
+
   // `== title ==` separators are often bare <line stroke=#000> pairs.
+  // Skip dashed lifelines (stroke-dasharray) — those are not dividers.
   out = out.replace(/<line\b([^>]*?)(\/?)>/gi, (full, attrs: string, selfClose: string) => {
     if (/\bclass\s*=/i.test(attrs)) return full;
-    const strokeAttr = normalizeHexColor(getAttr(`<x${attrs}>`, 'stroke'));
     const style = getAttr(`<x${attrs}>`, 'style') ?? '';
+    if (/stroke-dasharray\s*:/i.test(style) || /\bstroke-dasharray\s*=/i.test(attrs)) {
+      return full;
+    }
+    const strokeAttr = normalizeHexColor(getAttr(`<x${attrs}>`, 'stroke'));
     const strokeStyle = normalizeHexColor(
       style.match(/(?:^|;)\s*stroke\s*:\s*([^;]+)/i)?.[1]?.trim() ?? null,
     );

@@ -29,9 +29,18 @@ export function plantumlSequenceBindings(): SvgBinding[] {
 
     sheet('.themed-svg-root .participant rect', 'fill', 'color.surface.primary'),
     sheet('.themed-svg-root .participant rect', 'stroke', 'color.border.primary'),
+
+    // Stick-figure actors (`actor` → ellipse head + path limbs). Use edge, not
+    // border: host dark themes often set border to near-invisible hairlines.
     sheet('.themed-svg-root .participant ellipse', 'fill', 'color.surface.primary'),
-    sheet('.themed-svg-root .participant ellipse', 'stroke', 'color.border.primary'),
-    sheet('.themed-svg-root .participant path', 'stroke', 'color.border.primary'),
+    sheet('.themed-svg-root .participant ellipse', 'stroke', 'color.edge'),
+    sheet('.themed-svg-root .participant path', 'stroke', 'color.edge'),
+    sheet('.themed-svg-root .actor ellipse', 'fill', 'color.surface.primary'),
+    sheet('.themed-svg-root .actor ellipse', 'stroke', 'color.edge'),
+    sheet('.themed-svg-root .actor path', 'stroke', 'color.edge'),
+    sheet('.themed-svg-root .actor line', 'stroke', 'color.edge'),
+    sheet('.themed-svg-root .actor circle', 'fill', 'color.surface.primary'),
+    sheet('.themed-svg-root .actor circle', 'stroke', 'color.edge'),
 
     sheet('.themed-svg-root .participant-lifeline line', 'stroke', 'color.edge'),
 
