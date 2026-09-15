@@ -1,6 +1,6 @@
 {
   "name": "@dev-centr/plantuml-svg-css-vars",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Post-process PlantUML/Kroki SVG through Themed SVG (adaptive + host) with webCompatibility normalization.",
   "type": "module",
   "license": "MIT",

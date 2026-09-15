@@ -16,23 +16,37 @@ function sheet(
 
 /**
  * Structural bindings for PlantUML sequence diagrams (Kroki / PlantUML 1.202x SVG).
+ *
+ * PlantUML puts `participant` / `message` classes on parent `<g>` nodes while
+ * paints live on child `rect` / `ellipse` / `path` / `line` / `polygon` with
+ * presentation attributes. Bind the painted descendants so stylesheet
+ * `!important` rules (and inline stroke sync) beat those attributes.
  */
 export function plantumlSequenceBindings(): SvgBinding[] {
   return [
     sheet('.themed-svg-root', 'background-color', 'color.canvas'),
     sheet('.themed-svg-root text', 'fill', 'color.text.primary'),
-    sheet('.themed-svg-root .participant', 'fill', 'color.surface.primary'),
-    sheet('.themed-svg-root .participant', 'stroke', 'color.border.primary'),
-    sheet('.themed-svg-root .participant-head', 'fill', 'color.surface.primary'),
-    sheet('.themed-svg-root .participant-head', 'stroke', 'color.border.primary'),
-    sheet('.themed-svg-root .participant-tail', 'fill', 'color.surface.primary'),
-    sheet('.themed-svg-root .participant-tail', 'stroke', 'color.border.primary'),
+
+    sheet('.themed-svg-root .participant rect', 'fill', 'color.surface.primary'),
+    sheet('.themed-svg-root .participant rect', 'stroke', 'color.border.primary'),
+    sheet('.themed-svg-root .participant ellipse', 'fill', 'color.surface.primary'),
+    sheet('.themed-svg-root .participant ellipse', 'stroke', 'color.border.primary'),
+    sheet('.themed-svg-root .participant path', 'stroke', 'color.border.primary'),
+
     sheet('.themed-svg-root .participant-lifeline line', 'stroke', 'color.edge'),
-    sheet('.themed-svg-root .message', 'stroke', 'color.edge'),
+
+    sheet('.themed-svg-root .message line', 'stroke', 'color.edge'),
+    sheet('.themed-svg-root .message polygon', 'fill', 'color.edge'),
+    sheet('.themed-svg-root .message polygon', 'stroke', 'color.edge'),
     sheet('.themed-svg-root .message path', 'fill', 'color.edge'),
     sheet('.themed-svg-root .message path', 'stroke', 'color.edge'),
-    sheet('.themed-svg-root .note', 'fill', 'color.surface.secondary'),
-    sheet('.themed-svg-root .note', 'stroke', 'color.border.primary'),
+
+    sheet('.themed-svg-root .note', 'fill', 'color.status.warning'),
+    sheet('.themed-svg-root .note', 'stroke', 'color.status.warning-border'),
+
+    sheet('.themed-svg-root .sequence-divider', 'fill', 'color.surface.secondary'),
+    sheet('.themed-svg-root .sequence-divider', 'stroke', 'color.border.primary'),
+
     sheet('.themed-svg-root marker path', 'fill', 'color.edge'),
     sheet('.themed-svg-root marker path', 'stroke', 'color.edge'),
   ];

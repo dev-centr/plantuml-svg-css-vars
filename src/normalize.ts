@@ -40,6 +40,77 @@ function parseLength(value: string | null): number | null {
   return Number(m[1]);
 }
 
+/** Classic PlantUML note sticky fills (hex, any case). */
+const NOTE_FILLS = new Set([
+  '#feffdd',
+  '#ffffcc',
+  '#fbfb77',
+  '#ffffaa',
+  '#eee8aa',
+  '#f5f5dc',
+]);
+
+/** PlantUML `== divider ==` bar fills. */
+const DIVIDER_FILLS = new Set(['#eeeeee', '#e2e2e2', '#f0f0f0', '#dddddd']);
+
+function normalizeHexColor(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const trimmed = value.trim().toLowerCase();
+  if (/^#[0-9a-f]{6}$/.test(trimmed)) return trimmed;
+  if (/^#[0-9a-f]{3}$/.test(trimmed)) {
+    const [, r, g, b] = trimmed;
+    return `#${r}${r}${g}${g}${b}${b}`;
+  }
+  return null;
+}
+
+function appendClass(attrs: string, className: string): string {
+  if (new RegExp(`\\bclass\\s*=\\s*("[^"]*|\'[^\']*)\\b${className}\\b`, 'i').test(attrs)) {
+    return attrs;
+  }
+  if (/\sclass\s*=\s*"/i.test(attrs)) {
+    return attrs.replace(/\sclass\s*=\s*"/i, ` class="${className} `);
+  }
+  if (/\sclass\s*=\s*'/i.test(attrs)) {
+    return attrs.replace(/\sclass\s*=\s*'/i, ` class='${className} `);
+  }
+  return `${attrs} class="${className}"`;
+}
+
+/**
+ * PlantUML often omits semantic classes on note / divider paint nodes.
+ * Tag them so sequence bindings can recolor in dark mode.
+ */
+export function classifyPlantumlSequencePaint(svg: string): string {
+  let out = svg.replace(
+    /<(path|rect|polygon)\b([^>]*?)(\/?)>/gi,
+    (full, tag: string, attrs: string, selfClose: string) => {
+      const fill = normalizeHexColor(getAttr(`<x${attrs}>`, 'fill'));
+      if (!fill) return full;
+      let next = attrs;
+      if (NOTE_FILLS.has(fill)) next = appendClass(next, 'note');
+      else if (DIVIDER_FILLS.has(fill)) next = appendClass(next, 'sequence-divider');
+      else return full;
+      return `<${tag}${next}${selfClose}>`;
+    },
+  );
+
+  // `== title ==` separators are often bare <line stroke=#000> pairs.
+  out = out.replace(/<line\b([^>]*?)(\/?)>/gi, (full, attrs: string, selfClose: string) => {
+    if (/\bclass\s*=/i.test(attrs)) return full;
+    const strokeAttr = normalizeHexColor(getAttr(`<x${attrs}>`, 'stroke'));
+    const style = getAttr(`<x${attrs}>`, 'style') ?? '';
+    const strokeStyle = normalizeHexColor(
+      style.match(/(?:^|;)\s*stroke\s*:\s*([^;]+)/i)?.[1]?.trim() ?? null,
+    );
+    const stroke = strokeAttr ?? strokeStyle;
+    if (stroke !== '#000000' && stroke !== '#181818') return full;
+    return `<line${appendClass(attrs, 'sequence-divider')}${selfClose}>`;
+  });
+
+  return out;
+}
+
 /**
  * Normalize PlantUML/Kroki SVG for responsive web embedding.
  */
@@ -136,5 +207,5 @@ export function normalizePlantumlSvgForWeb(
     }
   }
 
-  return out;
+  return classifyPlantumlSequencePaint(out);
 }

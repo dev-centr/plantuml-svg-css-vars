@@ -1,0 +1,22 @@
+= Sequence paint descendant bindings
+:description: Fix dark-mode PlantUML sequence notes and child shape colors.
+:page-audience: plantuml-svg-css-vars users and maintainers
+:page-usage-context: Understanding why PlantUML sequence diagrams need descendant bindings
+:page-orig-author: Cursor agent on behalf of Ryan Johnson
+:page-last-author: Cursor agent on behalf of Ryan Johnson
+:page-last-edited: 2026-09-15
+
+== Why
+
+Kroki/PlantUML sequence SVG puts `participant` and `message` classes on parent
+`<g>` groups while fills and strokes live on child `rect` / `ellipse` / `line` /
+`polygon` presentation attributes. Stylesheet bindings on the parent never beat
+those child paints, so host dark mode left sticky notes yellow with light text
+and arrows/borders stuck on light-theme hex.
+
+== Change
+
+* `plantumlSequenceBindings()` targets painted descendants.
+* `classifyPlantumlSequencePaint()` tags classic note yellow and divider gray
+  fills with `note` / `sequence-divider` when PlantUML omits those classes.
+* Notes map to `color.status.warning` / `color.status.warning-border`.

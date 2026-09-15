@@ -1,6 +1,9 @@
 export type { PreparePlantumlSvgOptions, WebCompatibilityOptions } from './types.js';
 
-export { normalizePlantumlSvgForWeb } from './normalize.js';
+export {
+  classifyPlantumlSequencePaint,
+  normalizePlantumlSvgForWeb,
+} from './normalize.js';
 export { preparePlantumlSvgForWeb } from './prepare.js';
 export {
   plantumlBindingsForSvg,
